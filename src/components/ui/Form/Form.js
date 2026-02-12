@@ -1,0 +1,36 @@
+import React from 'react';
+
+const Form = ({ onSubmit, title, children, error, formLayoutClassName = "" }) => {
+  return (
+    <div className={`flex justify-center h-screen items-center glassy-card  ${formLayoutClassName}`} >
+      <div class=" p-[44px_26px] rounded-[10px]   opacity-100 min-w-  gap-[10px]">
+
+        <div className="mb-4">
+          <img src="/Frame 1000004906.png" alt="logo" className="h-10 w-56 mx-auto " />
+          <p className='glassy-text-primary text-base poppins-regular text-center pt-2'>Learn More. Earn More</p>
+        </div>
+        <div className="space-y-6" >
+          {title && (
+            <h2 className="glassy-text-primary">
+              {title}
+            </h2>
+          )}
+
+          {error && (
+            <div className="p-4 rounded-md bg-red-50">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">{error}</h3>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Form;

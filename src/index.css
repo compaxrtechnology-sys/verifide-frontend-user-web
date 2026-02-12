@@ -1,0 +1,798 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Outfit:wght@100..900&family=Oxygen+Mono&family=Oxygen:wght@300;400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Special+Gothic&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Outfit:wght@100..900&family=Oxygen+Mono&family=Oxygen:wght@300;400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Special+Gothic&display=swap');
+/* @import "tailwindcss"; */
+
+
+
+body {
+  font-family: "DM Sans", sans-serif;
+}
+
+
+.instrument-sans {
+  font-family: "Instrument Sans", sans-serif;
+}
+
+/* Autofill fix for dark theme inputs */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* --- Autofill Fix for Dark / Glassy Themes --- */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  caret-color: var(--text-primary) !important;
+}
+
+/* Optional – for dropdown arrows in dark mode */
+select:-webkit-autofill {
+  background-image: none !important;
+  color: var(--text-primary) !important;
+}
+
+/* Disable yellow autofill highlight in Chrome */
+input:-internal-autofill-selected {
+  appearance: none !important;
+  background-color: transparent !important;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+
+/* Remove default icon and placeholder */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Hide default placeholder text */
+
+
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.gradient-background {
+  background: linear-gradient(180deg, #2563EB 0%, #FFFFFF 100%);
+  gap: 40px;
+  opacity: 1;
+  padding: 74px 29px;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(6, 96, 223, 0.568);
+  /* Tailwind zinc-500 with opacity */
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.8);
+}
+
+
+
+
+@keyframes fileDelete {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(12px) scale(0.8);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translateX(24px) scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-fileDelete {
+  animation: fileDelete 1s ease-in-out infinite;
+}
+
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  /* Make arrows white */
+  width: 24px;
+  /* Smaller width */
+  height: 24px;
+  /* Smaller height */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px;
+  /* Smaller arrow icon */
+}
+
+
+/* Add to your global CSS */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #FFFFFF;
+  border-radius: 6px;
+}
+
+/* Dropdown animation */
+.dropdown-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.dropdown-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.dropdown-exit {
+  opacity: 1;
+}
+
+.dropdown-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+
+.hide-scrollbar {
+  overflow: hidden;
+}
+
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Add this to your global CSS (e.g., styles.css or in Tailwind config if needed) */
+.loader {
+  border-top-color: #0a66c2;
+  /* LinkedIn blue */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Shift the vertical line a bit right and make the curve smoother */
+.reply-line {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  /* slightly right of avatar */
+  width: 1.5rem;
+  height: 100%;
+  border-left: 2px solid #d1d5db;
+  border-bottom: 2px solid #d1d5db;
+  border-bottom-left-radius: 12px;
+  /* more curve */
+}
+
+
+/* Scrollbar styles */
+.custom-scrollbar2::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar2::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar2::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar2::-webkit-scrollbar-thumb:hover {
+  background-color: #718096;
+}
+
+.create-post-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-type-selector::-webkit-scrollbar {
+  height: 4px;
+}
+
+.post-type-selector::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.post-type-selector::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+.post-type-selector::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.tag {
+  animation: scaleIn 0.2s ease-in-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.character-count {
+  transition: color 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.drafts-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.poll-options {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.btn {
+  flex: 1 1 auto;
+  margin: 10px;
+  padding: 30px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+}
+
+
+.btn:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+}
+
+.btn-4 {
+  background-image: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 51%, #a1c4fd 100%);
+}
+
+
+/* Hide scrollbar for all elements with the no-scrollbar class */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ---------- Light Theme Variables ---------- */
+/* ---------- Light Theme Variables ---------- */
+/* ---------- Light Theme Variables ---------- */
+:root {
+  --bg-app: rgb(25, 25, 25);
+  /* app background */
+  --bg-card: rgba(247, 243, 243, 0.05);
+  /* card background */
+  --bg-modal: rgba(32, 39, 55, 0.3);
+  /* modal/card glassy background */
+  --bg-button: rgba(250, 250, 250, 1);
+  --bg-button-hover: rgba(240, 240, 240, 1);
+  --text-primary: #111111;
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-card-unread: rgba(247, 243, 243, 0.15);
+}
+
+/* ---------- Dark Theme Variables ---------- */
+[data-theme="dark"] {
+  --bg-app: #141414;
+  --bg-card: rgba(35, 35, 35, 0.7);
+  --bg-modal: rgba(32, 39, 55, 0.3);
+  /* keep modal consistent */
+  --bg-button: rgba(40, 40, 40, 0.7);
+  --bg-button-hover: rgba(60, 60, 60, 0.85);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --bg-card-unread: rgba(35, 35, 35, 0.85);
+
+}
+
+/* Glassy notification unread background */
+.bg-card-unread {
+  background-color: var(--bg-card-unread);
+  /* border-radius: 1rem; */
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ---------- Glassy App Background ---------- */
+.glassy-app {
+  position: relative;
+  min-height: 100vh;
+  
+  background-image: url('/public/theme background.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+
+  /* 🔥 Remove fixed attachment — main reason for scroll issues */
+  background-attachment: scroll;
+
+  transition: background 0.4s ease;
+}
+
+html, body, #root {
+  overflow-x: hidden;
+  overflow-y: hidden;
+ -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar, 
+#root::-webkit-scrollbar {
+  display: none;  /* hide scrollbar in Chrome/Safari */
+}
+
+
+/* ---------- Glassy Header ---------- */
+.glassy-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  transition: all 0.3s ease-in-out;
+}
+
+.glassy-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02));
+  pointer-events: none;
+}
+
+/* ---------- Glassy Card ---------- */
+.glassy-card {
+  position: relative;
+  background-color: var(--bg-modal);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: 1rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease-in-out;
+}
+
+.glassy-card-header {
+  position: absolute;
+  background-color: var(--bg-modal);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: 1rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ---------- Glassy Modal ---------- */
+.glassy-modal {
+background: linear-gradient(180deg, rgba(0, 102, 255, 0.2) 0%, rgba(33, 122, 255, 0) 13.6%, rgba(32, 39, 55, 0) 100%);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: 1rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease-in-out;
+}
+
+/* ---------- Glassy Button ---------- */
+.glassy-button {
+  background: linear-gradient(90deg, #0066FF 0%, #217AFF 50.96%, #A1BEFF 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  /* border-radius: 9999px; */
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(33, 122, 255, 0.35);
+  transition: all 0.25s ease-in-out;
+}
+
+.glassy-button:hover {
+  background: linear-gradient(90deg, #0052cc 0%, #1b6eff 50.96%, #8fb6ff 100%);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(33, 122, 255, 0.5);
+}
+
+.glassy-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(33, 122, 255, 0.3);
+}
+
+[data-theme="dark"] .glassy-button {
+  background: linear-gradient(90deg, #0040cc 0%, #1b6eff 50.96%, #8fb6ff 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(33, 122, 255, 0.25);
+}
+
+[data-theme="dark"] .glassy-button:hover {
+  background: linear-gradient(90deg, #0036aa 0%, #1b6eff 50.96%, #a1c4ff 100%);
+  box-shadow: 0 6px 18px rgba(33, 122, 255, 0.4);
+}
+
+/* ---------- Glassy Input ---------- */
+.glassy-input {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+}
+
+.glassy-input-notification {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+}
+
+.glassy-input:focus {
+  outline: none;
+  border-color: var(--bg-button-hover);
+}
+
+/* ---------- Glassy Text ---------- */
+.glassy-text-primary {
+  color: var(--text-primary);
+}
+
+.glassy-text-secondary {
+  color: var(--text-secondary);
+}
+
+.glassy-text-secondary:hover {
+  color: var(--text-primary);
+}
+
+
+/* input without width */
+.glassy-input-minimal {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+
+/* Base glassy dropdown */
+.glassy-select {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Hover + focus */
+.glassy-select:hover {
+  border-color: var(--primary-color);
+}
+
+.glassy-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+}
+
+/* Dropdown options */
+.glassy-select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+
+/* ---------- Autofill Fix (Light + Dark Themes) ---------- */
+.glassy-input:-webkit-autofill,
+.glassy-input:-webkit-autofill:hover,
+.glassy-input:-webkit-autofill:focus,
+textarea.glassy-input:-webkit-autofill,
+select.glassy-input:-webkit-autofill {
+  /* Preserve glassy background look */
+  background-color: var(--bg-card) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+  box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+
+  /* Text should match your theme */
+  -webkit-text-fill-color: var(--text-primary) !important;
+
+  /* Smooth transition to avoid flash */
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Optional: make autofill blend with blur & border */
+[data-theme="dark"] .glassy-input:-webkit-autofill,
+[data-theme="dark"] textarea.glassy-input:-webkit-autofill,
+[data-theme="dark"] select.glassy-input:-webkit-autofill {
+  background-color: var(--bg-card) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* ---------- Browser Calendar (Date/Time Inputs) ---------- */
+.glassy-input[type="date"],
+.glassy-input[type="datetime-local"],
+.glassy-input[type="time"],
+.glassy-input[type="month"],
+.glassy-input[type="week"] {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* When focused */
+.glassy-input[type="date"]:focus,
+.glassy-input[type="datetime-local"]:focus,
+.glassy-input[type="time"]:focus,
+.glassy-input[type="month"]:focus,
+.glassy-input[type="week"]:focus {
+  outline: none;
+  border-color: var(--bg-button-hover);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.15);
+}
+
+/* ---------- Calendar Icon Styling (for Chrome, Edge, Safari) ---------- */
+.glassy-input[type="date"]::-webkit-calendar-picker-indicator,
+.glassy-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.glassy-input[type="time"]::-webkit-calendar-picker-indicator,
+.glassy-input[type="month"]::-webkit-calendar-picker-indicator,
+.glassy-input[type="week"]::-webkit-calendar-picker-indicator {
+  background-color: transparent;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover & focus glow for icon */
+.glassy-input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.glassy-input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.glassy-input[type="time"]::-webkit-calendar-picker-indicator:hover,
+.glassy-input[type="month"]::-webkit-calendar-picker-indicator:hover,
+.glassy-input[type="week"]::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(33, 122, 255, 0.1);
+  opacity: 1;
+}
+
+/* ---------- Dark Theme Alignment ---------- */
+[data-theme="dark"] .glassy-input[type="date"],
+[data-theme="dark"] .glassy-input[type="datetime-local"],
+[data-theme="dark"] .glassy-input[type="time"],
+[data-theme="dark"] .glassy-input[type="month"],
+[data-theme="dark"] .glassy-input[type="week"] {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .glassy-input[type="date"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] .glassy-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] .glassy-input[type="time"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] .glassy-input[type="month"]::-webkit-calendar-picker-indicator,
+[data-theme="dark"] .glassy-input[type="week"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+
+/* -------- Joyride Tooltip Custom Styling -------- */
+.react-joyride__tooltip {
+  background: rgba(30, 30, 30, 0.8) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 16px !important;
+  padding: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  max-width: 300px !important;
+  overflow-wrap: break-word;
+  animation: fadeInUp 0.3s ease forwards;
+  z-index: 99999 !important;
+}
+
+.react-joyride__tooltip h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin-bottom: 6px;
+}
+
+.react-joyride__tooltip p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.react-joyride__tooltip button {
+  border-radius: 10px !important;
+  padding: 6px 12px !important;
+  font-size: 0.85rem !important;
+}
+
+.react-joyride__tooltip .react-joyride__tooltip-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+/* Prevent tooltip from overflowing screen */
+.react-joyride__tooltip--bottom,
+.react-joyride__tooltip--top {
+  max-width: 90vw !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swiper-container,
+.swiper-wrapper {
+  max-width: 62vw !important;
+   
+}
+ 
+
