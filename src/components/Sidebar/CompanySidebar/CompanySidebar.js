@@ -236,7 +236,7 @@ import React, {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegUser } from "react-icons/fa";
+import { FaBriefcase, FaCertificate, FaRegUser, FaUserGraduate } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 
 // Icons
@@ -420,22 +420,55 @@ const CompanySidebar = ({
       path: `${basePath}/connections`,
     },
     { icon: FaUsers, label: "Admin Roles", path: `${basePath}/admin-role` },
-    {
-      icon: MdAnalytics,
-      label: "Analytics",
-      children: [
-        {
-          icon: MdWork,
-          label: "Job Analytics",
-          path: `${basePath}/analytics/jobs`,
-        },
-        {
-          icon: MdOutlineEmojiEvents,
-          label: `Quest Analytics`,
-          path: `${basePath}/analytics/quests`,
-        },
-      ],
-    },
+   {
+  icon: MdAnalytics,
+  label: "Analytics",
+  children: [
+
+    // 🔹 COMPANY ANALYTICS
+    ...(basePath === "/company"
+      ? [
+          {
+            icon: MdWork,
+            label: "Job Analytics",
+            path: `${basePath}/analytics/jobs`,
+          },
+          {
+            icon: MdOutlineEmojiEvents,
+            label: "Quest Analytics",
+            path: `${basePath}/quest-data`,
+          },
+          {
+            icon: FaUsers,
+            label: "Employee Analytics",
+            path: `${basePath}/analytics/employee`,
+          },
+        ]
+      : []),
+
+    // 🔹 INSTITUTION ANALYTICS
+    ...(basePath === "/institution"
+      ? [
+          {
+            icon: FaUserGraduate,
+            label: "Student Analytics",
+            path: `${basePath}/analytics/student`,
+          },
+          {
+            icon: FaBriefcase,
+            label: "Student Job Analytics",
+            path: `${basePath}/analytics/student-job`,
+          },
+          {
+            icon: FaCertificate,
+            label: "Student Certification Analytics",
+            path: `${basePath}/analytics/student-certification`,
+          },
+        ]
+      : []),
+  ],
+}
+
   ];
 
   // ✅ Responsive handling
@@ -630,7 +663,7 @@ const CompanySidebar = ({
 
                       {item.label === "Verification" &&
                         verificationCount > 0 && (
-                          <span className="text-[10px] bg-red-600 items-center text-center text-white px-2   rounded-full animate-pulse">
+                          <span className="text-[10px] bg-red-600 items-center text-center glassy-text-primary px-2   rounded-full animate-pulse">
                             {verificationCount}
                           </span>
                         )}

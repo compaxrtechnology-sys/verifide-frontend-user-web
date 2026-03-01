@@ -5,7 +5,7 @@ const TimeFilter = ({ onApply }) => {
 
   return (
     <div className=" absolute   glassy-text-primary shadow-md border rounded-md p-2">
-      <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+      <input type="time" value={time} onChange={(e) => setTime(e.target.value)}  className="glassy-input"/>
       <button
         onClick={() => onApply?.(time)}
         className="mt-2 w-full glassy-button   text-xs py-1 rounded"

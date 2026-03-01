@@ -10,7 +10,7 @@ const ForageCertificate = () => {
                     <h1 className="text-5xl font-bold glassy-text-primary">Jane Smith</h1>
 
                     {/* Program Title */}
-                    <h2 className="text-3xl font-extrabold text-whitemt-1">
+                    <h2 className="text-3xl font-extrabold glassy-text-primarymt-1">
                         Bank &amp; Merge Co Private Equity Program
                     </h2>
 

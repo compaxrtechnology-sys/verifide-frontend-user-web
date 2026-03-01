@@ -51,6 +51,7 @@ import AlertModal from "../../components/ui/Modal/AlertModal";
 import moment from "moment-timezone";
 import { getCookie } from "../../components/utils/cookieHandler";
 import { useGlobalKeys } from "../../context/GlobalKeysContext";
+import JobStatusTracker from "./components/jobStatusTracker";
 const Button = ({ children, onClick, className = "", type = "button" }) => (
   <button
     type={type}
@@ -255,18 +256,18 @@ const Opportunities = () => {
     dispatch(getAllCompanies());
     dispatch(profileRoles());
   }, [dispatch]);
-const fetchRecommendedUsers = async (searchValue = "") => {
-  const responsex = await dispatch(
-    recommendedApplicationList({
-      job_id: jobId,
-      search: searchValue,   // ✅ send search
-      page: 1,
-      size: 10,
-    }),
-  ).unwrap();
+  const fetchRecommendedUsers = async (searchValue = "") => {
+    const responsex = await dispatch(
+      recommendedApplicationList({
+        job_id: jobId,
+        search: searchValue, // ✅ send search
+        page: 1,
+        size: 10,
+      }),
+    ).unwrap();
 
-  setRecommendedUsers(responsex?.data?.list || []);
-};
+    setRecommendedUsers(responsex?.data?.list || []);
+  };
 
   const handleJobAction = async (action, job) => {
     setJobId(job?._id);
@@ -1606,8 +1607,13 @@ const fetchRecommendedUsers = async (searchValue = "") => {
       </div>
 
       {(selectedJob || viewDetails) && (
-        <div className="hidden md:block xl:w-[25%] lg:w-[30%] md:w-[40%] glassy-card rounded-xl border-l border-gray-200 p-6 overflow-y-auto mt-10 hide-scrollbar">
-          <RightSideContent />
+        <div className="hidden md:block xl:w-[25%] lg:w-[30%] md:w-[40%]  rounded-xl  hide-scrollbar ">
+        
+
+          <div className="    glassy-card rounded-xl border-l border-gray-200 p-6 overflow-y-auto  mb-5">
+            <RightSideContent />
+          </div>
+            {viewDetails && <JobStatusTracker  data={modalState.data}/>}
         </div>
       )}
 
@@ -1991,13 +1997,13 @@ const fetchRecommendedUsers = async (searchValue = "") => {
         isActionButton={false}
       >
         <div className="mb-3">
-  <input
-    type="text"
-    placeholder="Search by name or headline... "
-    className="w-full border rounded-md px-3 py-2 text-sm glassy-input" 
-    onChange={(e) => fetchRecommendedUsers(e.target.value)}
-  />
-</div>
+          <input
+            type="text"
+            placeholder="Search by name or headline... "
+            className="w-full border rounded-md px-3 py-2 text-sm glassy-input"
+            onChange={(e) => fetchRecommendedUsers(e.target.value)}
+          />
+        </div>
 
         <div className="max-h-[80vh] overflow-y-auto">
           {loadingRecommended ? (

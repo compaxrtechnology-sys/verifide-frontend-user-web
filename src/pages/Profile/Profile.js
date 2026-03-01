@@ -199,6 +199,7 @@ const validationRules = {
   profile: {
     first_name: { required: true, message: "First name is required" },
     last_name: { required: true, message: "Last name is required" },
+    phone_number: { required: true, message: "Phone number is required" },
     birth_date: {
       required: true,
       validate: (value) => {
@@ -238,69 +239,116 @@ const validationRules = {
   },
 };
 
+// const useValidation = () => {
+//   const validateForm = useCallback((formData, type) => {
+//     const rules = validationRules[type];
+//     if (!rules) return { isValid: true, errors: {} };
+
+//     const getValue = (obj, path) => {
+//       return path.split(".").reduce((acc, key) => acc?.[key], obj);
+//     };
+
+//     const errors = {};
+//     let isValid = true;
+
+//     Object.entries(rules).forEach(([field, rule]) => {
+//       const value = getValue(formData, field);
+//       let isInvalid = false;
+
+//       if (type === "project") {
+//         if (field === "file_url" || field === "media_url") {
+//           // Check if both are empty
+//           if (!formData.file_url && !formData.media_url) {
+//             errors.file_url = "Either a project URL or media file is required";
+//             errors.media_url = "Either a project URL or media file is required";
+//             isValid = false;
+//             return;
+//           }
+
+//           return;
+//         }
+//       }
+
+//       if (type === "certification") {
+//         if (field === "credential_url" || field === "media_url") {
+//           // Check if both are empty
+//           if (!formData.credential_url && !formData.media_url) {
+//             errors.credential_url =
+//               "Either a credential URL or media file is required";
+//             errors.media_url =
+//               "Either a credential URL or media file is required";
+//             isValid = false;
+//             return;
+//           }
+//           // Skip individual validation for these fields since we're handling them together
+//           return;
+//         }
+//       }
+
+//       if (typeof rule.required === "function") {
+//         if (rule.required(formData)) {
+//           if (Array.isArray(value)) {
+//             isInvalid = !rule.validate?.(value) ?? value.length === 0;
+//           } else {
+//             isInvalid = !value || (typeof value === "string" && !value.trim());
+//           }
+//         }
+//       } else if (rule.required) {
+//         if (Array.isArray(value)) {
+//           isInvalid = !rule.validate?.(value) ?? value.length === 0;
+//         } else {
+//           isInvalid = !value || (typeof value === "string" && !value.trim());
+//         }
+//       }
+
+//       if (isInvalid) {
+//         errors[field] = rule.message;
+//         isValid = false;
+//       }
+//     });
+
+//     return { isValid, errors };
+//   }, []);
+
+//   return { validateForm };
+// };
 const useValidation = () => {
   const validateForm = useCallback((formData, type) => {
     const rules = validationRules[type];
-    if (!rules) return { isValid: true, errors: {} };
 
-    const getValue = (obj, path) => {
-      return path.split(".").reduce((acc, key) => acc?.[key], obj);
-    };
+    if (!rules) {
+      return { isValid: true, errors: {} };
+    }
+
+    const getValue = (obj, path) =>
+      path.split(".").reduce((acc, key) => acc?.[key], obj);
 
     const errors = {};
     let isValid = true;
 
     Object.entries(rules).forEach(([field, rule]) => {
       const value = getValue(formData, field);
-      let isInvalid = false;
 
-      if (type === "project") {
-        if (field === "file_url" || field === "media_url") {
-          // Check if both are empty
-          if (!formData.file_url && !formData.media_url) {
-            errors.file_url = "Either a project URL or media file is required";
-            errors.media_url = "Either a project URL or media file is required";
-            isValid = false;
-            return;
-          }
+      let fieldValid = true;
 
-          return;
-        }
-      }
-
-      if (type === "certification") {
-        if (field === "credential_url" || field === "media_url") {
-          // Check if both are empty
-          if (!formData.credential_url && !formData.media_url) {
-            errors.credential_url =
-              "Either a credential URL or media file is required";
-            errors.media_url =
-              "Either a credential URL or media file is required";
-            isValid = false;
-            return;
-          }
-          // Skip individual validation for these fields since we're handling them together
-          return;
-        }
-      }
-
-      if (typeof rule.required === "function") {
-        if (rule.required(formData)) {
-          if (Array.isArray(value)) {
-            isInvalid = !rule.validate?.(value) ?? value.length === 0;
-          } else {
-            isInvalid = !value || (typeof value === "string" && !value.trim());
-          }
-        }
-      } else if (rule.required) {
+      // Required validation
+      if (rule.required) {
         if (Array.isArray(value)) {
-          isInvalid = !rule.validate?.(value) ?? value.length === 0;
+          fieldValid = value.length > 0;
         } else {
-          isInvalid = !value || (typeof value === "string" && !value.trim());
+          fieldValid =
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== "";
         }
       }
 
-      if (isInvalid) {
+      // Custom validation
+      if (fieldValid && rule.validate) {
+        fieldValid = rule.validate(value, formData);
+      }
+
+      if (!fieldValid) {
         errors[field] = rule.message;
         isValid = false;
       }
@@ -324,6 +372,7 @@ const Profile = ({ profileData }) => {
       field_of_studies: "",
       start_date: "",
       end_date: "",
+      phone_number: "",
       currently_available: false,
       duration: "",
       skills_acquired: [],
@@ -679,6 +728,7 @@ const Profile = ({ profileData }) => {
         end_date: data.end_date
           ? new Date(data.end_date).toISOString().split("T")[0]
           : "",
+        phone_number: data.phone_number,
       };
 
       setFormData(transformedData);
@@ -816,7 +866,12 @@ const Profile = ({ profileData }) => {
     const { isValid, errors } = validateForm(formData, "profile");
     if (!isValid) {
       setErrors(errors);
-      toast.error("Please fix the validation errors");
+
+      const errorMessages = Object.values(errors);
+      const firstError = errorMessages[0];
+
+      toast.error(`${errorMessages.length} error(s) found. ${firstError}`);
+
       return;
     }
 
@@ -862,6 +917,7 @@ const Profile = ({ profileData }) => {
         first_name: formData?.first_name,
         last_name: formData?.last_name,
         // "email": formData?.email,
+        phone_number: formData?.phone_number,
         gender: formData?.gender,
         summary: formData?.summary,
         address: formData?.address,
@@ -1956,15 +2012,15 @@ const Profile = ({ profileData }) => {
                             : "max-h-0 opacity-0"
                         }`}
                       >
-                       <div className="flex items-center justify-end mb-4 mt-4" >
-                         <Button
-                          onClick={() => handleOpenModal("certifications")}
-                          icon={<GoPlus />}
-                          className="glassy-button hover:scale-105 justify-end"
-                        >
-                          Add Certificate
-                        </Button>{" "}
-                       </div>
+                        <div className="flex items-center justify-end mb-4 mt-4">
+                          <Button
+                            onClick={() => handleOpenModal("certifications")}
+                            icon={<GoPlus />}
+                            className="glassy-button hover:scale-105 justify-end"
+                          >
+                            Add Certificate
+                          </Button>{" "}
+                        </div>
                         {certificationData?.length > 0 ? (
                           <div className="relative w-full">
                             <Swiper

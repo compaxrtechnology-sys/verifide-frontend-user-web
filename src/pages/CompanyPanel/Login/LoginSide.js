@@ -269,7 +269,7 @@ const OrbitalMenu = () => {
                 animationDelay: '-13.33s'
               }}
             >
-              <div className="text-center text-xs font-medium text-whiteanimate-[counter-orbit-outer_40s_linear_infinite]">
+              <div className="text-center text-xs font-medium glassy-text-primaryanimate-[counter-orbit-outer_40s_linear_infinite]">
                 Product Manager
               </div>
               <div className="absolute w-[160px] left-[calc(50%-80px)] top-[-50px] glassy-card/90 glassy-text-primary rounded-lg text-center text-xs py-2 px-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">

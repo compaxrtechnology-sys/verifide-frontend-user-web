@@ -766,7 +766,7 @@ const CreateQuest = () => {
           {/* Quest Link (for non-survey-polls tabs) */}
 
           {activeTab === "survey-polls" && (
-            <label className="text-whitemt-2 glassy-text-primary">
+            <label className="glassy-text-primarymt-2 glassy-text-primary">
               Survey & Polls <span className="text-red-500">*</span>
             </label>
           )}

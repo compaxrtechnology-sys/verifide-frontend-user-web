@@ -338,7 +338,7 @@ const JobCard = ({
                 <p
                   className="glassy-text-primary glassy-card leading-relaxed whitespace-pre-line 
         p-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)]
-        min-h-[180px] md:min-h-[240px] lg:min-h-[260px] break-all"
+        min-h-[180px] md:min-h-[240px] lg:min-h-[260px] break-words"
                 >
                   <strong className="text-base font-semibold block mb-2">
                     {job?.job_description
@@ -371,7 +371,7 @@ const JobCard = ({
               ) : (
                 <p
                   className="glassy-text-primary text-sm glassy-card border border-[var(--border-color)] rounded-lg p-4
-        min-h-[180px] md:min-h-[220px] lg:min-h-[260px] flex items-center justify-center text-center"
+        min-h-[180px] md:min-h-[220px] lg:min-h-[260px] flex items-center justify-center text-center break-words"
                 >
                   {job?.job_description
                     ? "No job description provided."
@@ -549,7 +549,7 @@ const JobCard = ({
                 </Button>
                 {/* {activeTab === "open" && (
                   <span
-                    className="hover:glassy-card text-whitecursor-pointer flex justify-center items-center hover:rounded-full w-10 h-10"
+                    className="hover:glassy-card glassy-text-primarycursor-pointer flex justify-center items-center hover:rounded-full w-10 h-10"
                     onClick={() => handleCloseJob(job)}
                   >
                     <BsThreeDotsVertical />

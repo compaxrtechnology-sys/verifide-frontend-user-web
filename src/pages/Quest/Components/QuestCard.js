@@ -153,7 +153,8 @@ const QuestCard = ({
                       const percentage =
                         quest.poll.total_votes > 0
                           ? Math.round(
-                              (option.vote_count / quest.poll.total_votes) * 100
+                              (option.vote_count / quest.poll.total_votes) *
+                                100,
                             )
                           : 0;
 
@@ -164,7 +165,7 @@ const QuestCard = ({
                           onClick={() =>
                             quest?.isVoted
                               ? toast.info(
-                                  "You are already vote in this poll !"
+                                  "You are already vote in this poll !",
                                 )
                               : handleVoteClick(quest._id, optIdx)
                           }
@@ -220,7 +221,7 @@ const QuestCard = ({
           )}
 
           <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-            {(accessMode === "6" || isCompany() || isInstitution()) && (
+            {(accessMode !== "5" || isCompany() || isInstitution()) && (
               <button
                 className="text-xs glassy-text-secondary hover:text-blue-600 transition-colors flex items-center"
                 onClick={() => onViewEngagement(quest)}
@@ -230,38 +231,46 @@ const QuestCard = ({
             )}
 
             <div className="flex items-center gap-2">
-              {(quest.type === "sign-up" || quest.type === "feedbacks") && (
-                <>
-                  {accessMode === 5 ||
-                  isCompany() ||
-                  isInstitution() ||
-                  status === "Ended" ||
-                  quest?.isFullyFeedback
-                    ? null
-                    : !quest?.isEngaged && (
-                        <button
-                          className={`text-xs ${
-                            status === "Upcoming"
-                              ? "glassy-card cursor-not-allowed"
-                              : "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
-                          } glassy-text-primary px-3 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1`}
-                          disabled={status === "Upcoming"}
-                          onClick={() => onEngage(quest)}
-                        >
-                          <BiPlus className="text-sm" /> Start
-                        </button>
-                      )}
-                </>
-              )}
-
-              {quest.type === "survey-polls" &&
-                accessMode === 5 &&
-                status === "Ongoing" &&
-                !quest?.isVoted && (
-                  <SurveyButton onClick={() => setShowForm(true)} />
+              {(quest.type === "sign-up" || quest.type === "feedbacks") &&
+                !isCompany() &&
+                !isInstitution() &&
+                !quest?.isFullyFeedback &&
+                !quest?.isEngaged && (
+                  <button
+                    className={`text-xs ${
+                      status === "Upcoming"
+                        ? "glassy-card cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600"
+                    } glassy-text-primary px-3 py-1.5 rounded-lg shadow-sm transition-all flex items-center gap-1`}
+                    disabled={status === "Upcoming"}
+                    onClick={() => onEngage(quest)}
+                  >
+                    <BiPlus className="text-sm" /> Start
+                  </button>
                 )}
+{!isCompany() &&
+  !isInstitution() &&
+  (status === "Ended" || quest?.isEngaged) && (
+    <button
+      className={`text-xs px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1 cursor-not-allowed ${
+        status === "Ended"
+          ? "bg-gray-200 text-gray-600"
+          : "bg-green-100 text-green-700"
+      }`}
+      disabled
+    >
+      <BiCheck className="text-sm" />
+      {status === "Ended" ? "Ended" : "Already Participated"}
+    </button>
+)}         {(quest.type === "survey-polls" &&
+                status === "Ongoing" &&
+                !isCompany()) &&
+                !isInstitution() &&
+                (!quest?.isVoted && (
+                  <SurveyButton onClick={() => setShowForm(true)} />
+                ))}
 
-              {(accessMode === "6" || isCompany() || isInstitution()) && (
+              {(  isCompany() || isInstitution()) && (
                 <>
                   {(status === "Upcoming" || status === "Ended") && (
                     <button

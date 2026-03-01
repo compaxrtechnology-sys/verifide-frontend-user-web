@@ -453,6 +453,10 @@ function Layout() {
                       profileData?.getProfileData?.data?.data?.personalInfo
                         ?.headline
                     }
+                     profileData={
+                      profileData?.getProfileData?.data?.data?.personalInfo
+                       
+                    }
                   />
                 }
               />

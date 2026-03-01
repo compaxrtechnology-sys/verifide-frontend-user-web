@@ -32,9 +32,10 @@ const DropdownFilter = ({ options = [], multi = false, onApply }) => {
         >
           {multi && (
             <input
-              type="checkbox"
+              type="checkbox "
               checked={selected.includes(opt)}
               readOnly
+              className="glassy-input"
             />
           )}
           <span className="text-sm">{opt}</span>

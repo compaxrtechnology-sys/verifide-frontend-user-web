@@ -260,35 +260,7 @@ const UsersProfile = ({ currentUserId }) => {
                   </div>
                   <div className=" mt-5">
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 md:grid-cols-2">
-                      <div className="exp-edu-card">
-                        <h2 className="md:mb-1 lg:mb-1 xl:text-lg lg:text-[14px] md:text-[12px]  font-semibold glassy-text-primary">
-                          LATEST WORK EXPERIENCE
-                        </h2>
-                        <ExpEduCard
-                          logo={
-                            formData?.latestExperience?.logo_url ||
-                            "/Img/Profile/Frame (1).png"
-                          }
-                          title={
-                            formData?.latestExperience?.profileName ||
-                            "Add your latest work experience"
-                          }
-                          company={
-                            formData?.latestExperience?.companyName ||
-                            "Click the + button to add details about your job role and company"
-                          }
-                          duration={
-                            formData?.latestExperience?.start_date &&
-                            formData?.latestExperience?.end_date
-                              ? formatDateRange(
-                                  formData?.latestExperience?.start_date,
-                                  formData?.latestExperience?.end_date
-                                )
-                              : "Start and end date not added"
-                          }
-                          // location={formData?.profileInfo?.latestCompany?.headquarters?.address_line_1 || "Location not specified"}
-                        />
-                      </div>
+                    
 
                       <div className="exp-edu-card">
                         <h2 className="md:mb-1 lg:mb-1 xl:text-lg lg:text-[14px] md:text-[12px] font-semibold glassy-text-primary">
@@ -316,6 +288,35 @@ const UsersProfile = ({ currentUserId }) => {
                                 )
                               : "Start and end date not added"
                           }
+                        />
+                      </div>
+                        <div className="exp-edu-card">
+                        <h2 className="md:mb-1 lg:mb-1 xl:text-lg lg:text-[14px] md:text-[12px]  font-semibold glassy-text-primary">
+                          LATEST WORK EXPERIENCE
+                        </h2>
+                        <ExpEduCard
+                          logo={
+                            formData?.latestExperience?.logo_url ||
+                            "/Img/Profile/Frame (1).png"
+                          }
+                          title={
+                            formData?.latestExperience?.profileName ||
+                            "Add your latest work experience"
+                          }
+                          company={
+                            formData?.latestExperience?.companyName ||
+                            "Click the + button to add details about your job role and company"
+                          }
+                          duration={
+                            formData?.latestExperience?.start_date &&
+                            formData?.latestExperience?.end_date
+                              ? formatDateRange(
+                                  formData?.latestExperience?.start_date,
+                                  formData?.latestExperience?.end_date
+                                )
+                              : "Start and end date not added"
+                          }
+                          // location={formData?.profileInfo?.latestCompany?.headquarters?.address_line_1 || "Location not specified"}
                         />
                       </div>
                       <div className="lg:col-span-1 md:col-span-2 mt-6 lg:mt-0">
@@ -398,91 +399,7 @@ const UsersProfile = ({ currentUserId }) => {
                     </div>
                   </div>
                 )}
-
-                <div className="glassy-card rounded-lg p-6 border border-[#D3D3D3]">
-                  <h2 className="text-xl font-bold glassy-text-primary mb-6">
-                    EXPERIENCE
-                  </h2>
-                  {formData?.experiences?.length > 0 ? (
-                    <>
-                      <div className="items-center  grid grid-cols-2">
-                        {formData.experiences.map((exp, index) => (
-                          <div key={index} className="flex flex-col">
-                            <div className="flex justify-start items-start gap-2">
-                              <img
-                                src={
-                                  exp?.logo_url || "/Img/Profile/Frame (1).png"
-                                }
-                                alt="logo"
-                                onError={(e) =>
-                                  (e.target.src = "/Img/Profile/Frame (1).png")
-                                }
-                                className="w-10 h-10  rounded"
-                              />
-                              <div>
-                                <h3 className="font-semibold glassy-text-primary text-base">
-                                  {exp.companyName || ""}
-                                </h3>
-                                <p className="glassy-text-primary text-sm">
-                                  {exp.profileName || ""}
-                                </p>
-                                {exp.start_date && (
-                                  // <p className="glassy-text-primary mb-2">
-                                  //   {convertTimestampToDate(exp.start_date)} -{" "}
-                                  //   {convertTimestampToDate(exp.end_date)}
-                                  // </p>
-                                  <p className="glassy-text-secondary mb-2">
-                                    {exp.start_date
-                                      ? new Date(
-                                          exp.start_date
-                                        ).toLocaleDateString("en-US", {
-                                          month: "short",
-                                          year: "numeric",
-                                        })
-                                      : "Start Date"}{" "}
-                                    -{" "}
-                                    {exp.end_date
-                                      ? new Date(
-                                          exp.end_date
-                                        ).toLocaleDateString("en-US", {
-                                          month: "short",
-                                          year: "numeric",
-                                        })
-                                      : "Present"}
-                                  </p>
-                                )}
-                                {exp.grade && (
-                                  <p className="glassy-text-primary">
-                                    Grade: {exp.grade}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="px-6 py-5 text-center border-2 border-gray-300 border-dashed rounded-lg glassy-card hover:border-blue-300 transition-colors duration-300">
-                        <div className="flex items-center justify-center mx-auto mb-4">
-                          <img
-                            src={`/Img/Profile/Frame (1).png`}
-                            alt=""
-                            className="hover:scale-110 transition-transform duration-300"
-                          />
-                        </div>
-                        <h3 className="mb-2 text-[20px]  font-semibold glassy-text-primary">
-                          {`No experiences added`}
-                        </h3>
-                        <p className="text-sm glassy-text-secondary">
-                          {`Add your professional experiences to build a comprehensive profile`}
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className="glassy-card rounded-lg p-6 border border-[#D3D3D3]">
+  <div className="glassy-card rounded-lg p-6 border border-[#D3D3D3]">
                   <h2 className="text-xl font-bold glassy-text-primary mb-6">
                     Education
                   </h2>
@@ -600,6 +517,90 @@ const UsersProfile = ({ currentUserId }) => {
                     );
                   })()}
                 </div>
+                <div className="glassy-card rounded-lg p-6 border border-[#D3D3D3]">
+                  <h2 className="text-xl font-bold glassy-text-primary mb-6">
+                    EXPERIENCE
+                  </h2>
+                  {formData?.experiences?.length > 0 ? (
+                    <>
+                      <div className="items-center  grid grid-cols-2">
+                        {formData.experiences.map((exp, index) => (
+                          <div key={index} className="flex flex-col">
+                            <div className="flex justify-start items-start gap-2">
+                              <img
+                                src={
+                                  exp?.logo_url || "/Img/Profile/Frame (1).png"
+                                }
+                                alt="logo"
+                                onError={(e) =>
+                                  (e.target.src = "/Img/Profile/Frame (1).png")
+                                }
+                                className="w-10 h-10  rounded"
+                              />
+                              <div>
+                                <h3 className="font-semibold glassy-text-primary text-base">
+                                  {exp.companyName || ""}
+                                </h3>
+                                <p className="glassy-text-primary text-sm">
+                                  {exp.profileName || ""}
+                                </p>
+                                {exp.start_date && (
+                                  // <p className="glassy-text-primary mb-2">
+                                  //   {convertTimestampToDate(exp.start_date)} -{" "}
+                                  //   {convertTimestampToDate(exp.end_date)}
+                                  // </p>
+                                  <p className="glassy-text-secondary mb-2">
+                                    {exp.start_date
+                                      ? new Date(
+                                          exp.start_date
+                                        ).toLocaleDateString("en-US", {
+                                          month: "short",
+                                          year: "numeric",
+                                        })
+                                      : "Start Date"}{" "}
+                                    -{" "}
+                                    {exp.end_date
+                                      ? new Date(
+                                          exp.end_date
+                                        ).toLocaleDateString("en-US", {
+                                          month: "short",
+                                          year: "numeric",
+                                        })
+                                      : "Present"}
+                                  </p>
+                                )}
+                                {exp.grade && (
+                                  <p className="glassy-text-primary">
+                                    Grade: {exp.grade}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="px-6 py-5 text-center border-2 border-gray-300 border-dashed rounded-lg glassy-card hover:border-blue-300 transition-colors duration-300">
+                        <div className="flex items-center justify-center mx-auto mb-4">
+                          <img
+                            src={`/Img/Profile/Frame (1).png`}
+                            alt=""
+                            className="hover:scale-110 transition-transform duration-300"
+                          />
+                        </div>
+                        <h3 className="mb-2 text-[20px]  font-semibold glassy-text-primary">
+                          {`No experiences added`}
+                        </h3>
+                        <p className="text-sm glassy-text-secondary">
+                          {`Add your professional experiences to build a comprehensive profile`}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              
 
                 {/* <div className="glassy-card rounded-lg p-6 border border-[#D3D3D3]">
                   <h2 className="text-xl font-bold glassy-text-primary mb-6">

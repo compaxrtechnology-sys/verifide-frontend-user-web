@@ -451,12 +451,13 @@ const Opportunitiess2 = () => {
   }, []);
 
   return (
-    <div className="flex w-full min-h-screen relative">
+  <div className="flex w-full min-h-screen relative overflow-hidden">
+
       {/* Sidebar / Filters */}
       <div
         className={`
-    ${isMobile ? "!fixed" : ""}  /* 👈 fixed only on mobile */
-    top-0 left-0 h-screen w-72 sm:w-80 
+    ${isMobile ? "!fixed" : ""}  
+    top-0 left-0 h-screen   
     glassy-card shadow-xl z-50 overflow-y-auto 
     p-6 pt-10 hide-scrollbar
     transition-transform duration-300 ease-in-out
@@ -654,15 +655,11 @@ const Opportunitiess2 = () => {
 
       {/* Main Content */}
       <div
-        className={`  p-4 sm:p-6 w-full transition-all duration-300
+  className={`p-4 sm:p-6 w-full min-w-0 transition-all duration-300
       ${!selectedJob ? "xl:w-full" : "xl:w-[75%] lg:w-[70%] md:w-[60%]"}`}
       >
         {/* Filter Toggle Button (Mobile Only) */}
-
-        <div className="flex-1   mb-4">
-          {/* Your job listing content here */}
-        </div>
-        <div className="flex flex-wrap items-center justify-between mb-6 gap-3 lg:gap-0">
+  <div className="flex flex-wrap items-center justify-between mb-6 gap-3 lg:gap-0">
           {/* Tabs Section */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex space-x-1 p-1 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] w-full sm:w-auto">
@@ -698,9 +695,11 @@ const Opportunitiess2 = () => {
             </button>
           )}
         </div>
-        {/* ✅ Scrollable Job List */}
+        <div className="flex-1  min-w-0  mb-4">
+           {/* ✅ Scrollable Job List */}
         <div className="h-[calc(100vh-160px)] overflow-y-auto hide-scrollbar pr-2">
-          <div className="flex flex-col gap-4">
+         <div className="flex flex-col gap-4 min-w-0">
+
             {isLoading ? (
               Array.from({ length: 3 }).map((_, idx) => (
                 <div key={`skeleton-${idx}`} className="w-full">
@@ -709,7 +708,8 @@ const Opportunitiess2 = () => {
               ))
             ) : data?.data?.list && data?.data?.list.length > 0 ? (
               data.data.list.map((ele) => (
-                <div key={ele._id} className="w-full">
+               <div key={ele._id} className="w-full min-w-0">
+
                   <StudentJobCard
                     job={ele}
                     handleAction={handleAction}
@@ -727,6 +727,9 @@ const Opportunitiess2 = () => {
           </div>
         </div>
 
+        </div>
+      
+      
         {data?.data?.total > size && (
           <Pagination
             totalPages={Math.ceil(data?.data?.total / size)}
@@ -835,7 +838,7 @@ const Opportunitiess2 = () => {
               {selectedJob?.job_description || "No description provided."}
             </p> */}
             <p
-              className="glassy-text-primary leading-relaxed break-words break-all whitespace-pre-line
+              className="glassy-text-primary leading-relaxed break-words  whitespace-pre-line
       p-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)]
       overflow-hidden text-ellipsis"
             >
@@ -1053,7 +1056,11 @@ const Opportunitiess2 = () => {
                 {/* <p className="glassy-text-secondary p-3 rounded-lg border border-gray-100 whitespace-pre-line break-words break-all overflow-hidden text-ellipsis">
                   {selectedJob?.job_description || "No description provided."}
                 </p> */}
-                {isExpandedMobile
+                            <p
+              className="glassy-text-primary leading-relaxed break-words  whitespace-pre-line
+      p-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)]
+      overflow-hidden text-ellipsis"
+            > {isExpandedMobile
                   ? selectedJob?.job_description
                   : selectedJob?.job_description.slice(0, 200)}
                 {selectedJob?.job_description.length > 200 && (
@@ -1066,7 +1073,8 @@ const Opportunitiess2 = () => {
                       {isExpandedMobile ? "See less" : "See more"}
                     </button>
                   </>
-                )}
+                )}</p>
+               
               </div>
 
               {/* Required Skills */}

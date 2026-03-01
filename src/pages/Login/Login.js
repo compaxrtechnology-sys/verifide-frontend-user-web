@@ -486,7 +486,7 @@ const Login = () => {
                     >
                       Create account
                     </Link>
-                    <Link
+                    {/* <Link
                       to={`/register-company?redirect=${encodeURIComponent(
                         redirectUrl,
                       )}`}
@@ -499,7 +499,7 @@ const Login = () => {
                       )}`}
                     >
                       Create Institute account
-                    </Link>
+                    </Link> */}
                   </span>
                 </div>
                 {/* <div className="flex justify-center gap-4 items-center text-sm font-medium text-blue-600">

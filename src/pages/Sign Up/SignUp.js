@@ -7,7 +7,7 @@ import useFormHandler from "../../components/hooks/useFormHandler";
 import Button from "../../components/ui/Button/Button";
 import Aos from "aos";
 import CourseCard from "../../components/ui/cards/CourseCard";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { register, verifyRegisterOtp } from "../../redux/slices/authSlice";
 import { toast } from "sonner";
 import {
@@ -16,11 +16,19 @@ import {
   removeCookie,
 } from "../../components/utils/cookieHandler";
 import { apiUrl } from "../../components/hooks/axiosProvider";
+import FilterSelect from "../../components/ui/InputAdmin/FilterSelect";
+import { countries } from "../../redux/Global Slice/cscSlice";
+import { arrayTransform } from "../../components/utils/globalFunction";
 
 const SignUp = () => {
   const [searchParams] = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/user/feed"; // fallback
-
+  const cscSelector = useSelector((state) => state.global);
+  const countriesList = arrayTransform(
+    cscSelector?.countriesData?.data?.data || [],
+  );
+  const stateList = arrayTransform(cscSelector?.stateData?.data?.data || []);
+  const cityList = arrayTransform(cscSelector?.citiesData?.data?.data || []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOtpState, setIsOtpState] = useState(false);
@@ -43,15 +51,24 @@ const SignUp = () => {
     });
   }, []);
 
-  const { formData, handleChange, errors, setErrors } = useFormHandler({
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-    first_name: "",
-    last_name: "",
-    checkbox: false,
-  });
+  const { formData, handleChange, setFormData, errors, setErrors } =
+    useFormHandler({
+      email: "",
+      username: "",
+      password: "",
+      phone_no: "",
+      country_code: {
+        name: "",
+        dial_code: "",
+        short_name: "",
+        emoji: "",
+      },
+
+      confirmPassword: "",
+      first_name: "",
+      last_name: "",
+      checkbox: false,
+    });
 
   useEffect(() => {
     if (isOtpState && remainingTime > 0 && isResendDisabled) {
@@ -106,13 +123,14 @@ const SignUp = () => {
       newErrors.username = "Username must be at least 3 characters long";
     } else if (
       !/^(?!.*\.\..*)(?!.*\..*\..*)[a-zA-Z0-9_.]+$/.test(
-        formData.username.trim()
+        formData.username.trim(),
       )
     ) {
       newErrors.username =
         "Username can only contain letters, numbers, underscores, and at most one dot (.)";
     }
-
+    if (!formData.phone_no?.trim())
+      newErrors.phone_no = "Phone number is required";
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 8) {
@@ -166,6 +184,8 @@ const SignUp = () => {
       const sanitizedData = {
         email: formData.email.trim().toLowerCase(),
         username: formData.username.trim(),
+        country_code: formData.country_code,
+        phone_number: formData.phone_no,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
         first_name: formData.first_name.trim(),
@@ -177,7 +197,7 @@ const SignUp = () => {
       if (res?.data?.redisToken) {
         setCookie("register_token", res.data.redisToken, { expires: 1 });
         toast.success(
-          res?.message || "Registration successful! Please verify your email."
+          res?.message || "Registration successful! Please verify your email.",
         );
         setIsOtpState(true);
         setRemainingTime(120);
@@ -203,7 +223,17 @@ const SignUp = () => {
     setOtpError("");
     return true;
   };
-
+  const handleCountryChange = (field, country) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        name: country?.label || "",
+        dial_code: country?.dial_code || "",
+        short_name: country?.short_name || "",
+        emoji: country?.emoji || "",
+      },
+    }));
+  };
   const handleOtpSubmit = async (e) => {
     if (e) e.preventDefault();
     if (isSubmitting) return;
@@ -221,7 +251,7 @@ const SignUp = () => {
         verifyRegisterOtp({
           redisToken: redisToken,
           otp: otpValue,
-        })
+        }),
       ).unwrap();
 
       toast.success(res?.message || "Email verified successfully!");
@@ -351,7 +381,7 @@ const SignUp = () => {
       toast.error(
         error?.message ||
           error ||
-          "Failed to resend verification code. Please try again."
+          "Failed to resend verification code. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -435,9 +465,11 @@ const SignUp = () => {
   const handleGoogleLogin = () => {
     window.location.href = `${apiUrl}user/auth/google-login`;
   };
-
+  useEffect(() => {
+    dispatch(countries());
+  }, []);
   return (
-    <div className="min-h-screen glassy-card">
+    <div className="min-h-screen w-full overflow-y-auto scroll-smooth">
       <div className="flex flex-col md:flex-row">
         <div className="md:block hidden">
           {/* <div className="gradient-background flex gap-x-10 items-center justify-center ">
@@ -518,19 +550,19 @@ const SignUp = () => {
             </div>
           </div> */}
           <div
-            className="hidden md:block w-full h-screen"
+            className="hidden md:block sm:hidden w-full min-h-screen"
             data-aos-duration="1000"
             data-aos-easing="ease-out-quart"
           >
             <img
               src="/sign-otp-img.png"
               alt="Login illustration"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover min-h-screen"
             />
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 flex items-center justify-center p-6">
+       <div className="w-full md:w-1/2 flex justify-center px-4 sm:px-6">
           <div
             className="w-full max-w-lg border-[0.5px] glassy-card border-[#A9A9A9]/50 shadow-sm rounded-[10px] p-4"
             data-aos="fade-left"
@@ -600,7 +632,10 @@ const SignUp = () => {
                   </p>
                 </div>
 
-                <form onSubmit={handleOtpSubmit} className="w-full">
+                <form
+                  onSubmit={handleOtpSubmit}
+                  className="w-full overflow-y-auto"
+                >
                   {/* ✅ OTP Inputs */}
                   <div
                     className="flex justify-center flex-wrap gap-2 mb-4 px-2 sm:px-4"
@@ -727,6 +762,25 @@ const SignUp = () => {
                   autoComplete="email"
                   className="w-full h-10"
                   disabled={isSubmitting}
+                />
+                <FilterSelect
+                  label="Country Code"
+                  options={countriesList || []}
+                  selectedOption={countriesList?.find(
+                    (opt) =>
+                      opt.short_name === formData?.country_code?.short_name,
+                  )}
+                  onChange={(country) =>
+                    handleCountryChange("country_code", country)
+                  }
+                />
+                <CustomInput
+                  label="Phone Number *"
+                  value={formData?.phone_no}
+                  name="phone_no"
+                  onChange={(e) => handleChange("phone_no", e)}
+                  placeholder="Enter phone number"
+                  error={errors?.phone_no}
                 />
 
                 <div className="flex justify-between place-items-center gap-4">

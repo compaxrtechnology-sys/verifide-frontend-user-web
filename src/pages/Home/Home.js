@@ -51,6 +51,11 @@ import ActionButtonComment from "../../components/ui/Button/ActionButtonComment"
 import MessageText2 from "./components/MessageText2";
 import { BaseUrl } from "../../components/hooks/axiosProvider";
 import QuestPostCard from "./components/QuestPost";
+import { getFeedbackReport, submitFeedback, updateQuestViewCount, userRegisterOnQuest, voteOnPoll } from "../../redux/Global Slice/cscSlice";
+import useFormHandler from "../../components/hooks/useFormHandler";
+import FeedbackModal from "../Quest/Components/FeedbackModal";
+import Modal from "../../components/ui/Modal/Modal";
+import CustomInput from "../../components/ui/Input/CustomInput";
 
 const useIO = ({ onIntersect, rootMargin = "120px", threshold = 0.1 }) => {
   const observerRef = useRef(null);
@@ -660,7 +665,9 @@ const Home = () => {
     { label: "All", value: "all" },
     { label: "Jobs", value: "jobs" },
     { label: "Certificates", value: "certificates" },
-    { label: "My Post", value: "self" },
+    { label: "Quests", value: "quests" },
+    { label: "Posts", value: "text" },
+    // { label: "My Post", value: "self" },
   ];
 
   const buttonRef = useRef(null);
@@ -683,13 +690,160 @@ const Home = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showOptionsDropdown]);
-
+  const handleVote = async (questId, optionIndex) => {
+    try {
+      const res = await dispatch(
+        voteOnPoll({ quest_id: questId, option_index: optionIndex }),
+      ).unwrap();
+      toast.success(res?.message);
+      // fetchQuest();
+    } catch (error) {
+      toast.error(error);
+    }
+  };
   // console.log(
   //   "2222222222222",
   //   commentsData["68c506de8c890beb0a1c427c"] || [],
   //   commentsData
   // );
+    const [feedbackData, setFeedbackData] = useState(null);
+     
+  
+    const [isEngagementModalOpen, setIsEngagementModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [isLoading2, setLoading2] = useState(false);
+    const [questData, setQuestData] = useState(null);
+    const [engagementData, setEngagementData] = useState(null);
+    const [activeTab2, setActiveTab2] = useState();
+    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+      const { formData, resetForm, setErrors, handleChange, errors } =
+        useFormHandler({
+          email: "",
+          identifier: "",
+          remarks: "",
+        });
+    
+  
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [activeTab3, setActiveTab3] = useState("Individual");
+  
+    const [feedbackDataModal, setFeedbackDataModal] = useState(null);
+    const [surveyData, setSurveyData] = useState(null);
+    const [surveyDataModal, setSurveyDataModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  const fetchFeedBack = async (data) => {
+    if (data?.type === "sign-up") {
+      setIsModalOpen(true);
+      setQuestData(data);
+    } else {
+      try {
+        setLoading(true);
+        const res = await dispatch(getFeedbackReport({ quest_id: data?._id }));
+        if (res) {
+          setFeedbackData(res.payload.data);
+          setQuestData(data);
+          setFeedbackModalOpen(true);
+        }
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
+  const handleSubmitFeedback = async (payload) => {
+    try {
+      await dispatch(submitFeedback(payload));
+      const res = await dispatch(
+        getFeedbackReport({ quest_id: questData?._id })
+      );
+      if (res) {
+        setFeedbackData(res.payload.data);
+      }
+      return true;
+    } catch (error) {
+      toast.error(error.message || "Failed to submit feedback");
+      throw error;
+    }
+  };
+    const handleCloseFeedback = () => {
+    setFeedbackDataModal(false);
+    setSurveyData(null);
+    setFeedbackData(null);
+    setSurveyDataModal(false);
+  };
+    const handleSubmit = async () => {
+      let newErrors = {};
+      console.log("👉 Submitting formData:", formData);
+  
+      // ✅ Sanitize input values
+      const email = (formData?.email || "").trim();
+      const identifier = (formData?.identifier || "").trim();
+      const remarks = (formData?.remarks || "").trim();
+  
+      // ✅ Email required
+      if (!email) {
+        newErrors.email = "Email is required";
+      } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          newErrors.email = "Please enter a valid email address";
+        }
+      }
+  
+      // ✅ Identifier validation (optional)
+      if (identifier && identifier.length < 4) {
+        newErrors.identifier = "Identifier must be at least 4 characters long";
+      }
+  
+      // ✅ Remarks validation
+      if (!remarks) {
+        newErrors.remarks = "Please provide a remark";
+      } else if (remarks.length < 5) {
+        newErrors.remarks = "Remark must be at least 5 characters long";
+      } else if (remarks.length > 100) {
+        newErrors.remarks = "Remark cannot exceed 100 characters";
+      }
+  
+      console.log("🧩 Validation Errors:", newErrors);
+  
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        console.log("⛔ Form not submitted due to validation errors");
+        return;
+      }
+  
+      console.log("✅ No validation errors — calling API");
+  
+      try {
+        const res = await dispatch(
+          userRegisterOnQuest({
+            email,
+            identifier,
+            remarks,
+            quest_id: questData?._id,
+          })
+        ).unwrap();
+  
+        toast.success(res?.message || "Registered successfully!");
+        resetForm();
+        setIsModalOpen(false);
+  
+        if (res) {
+          dispatch(
+            updateQuestViewCount({
+              questId: questData._id,
+              engagementCount: (questData.engagement_count || 0) + 1,
+              isEngaged: true,
+            })
+          );
+        }
+      } catch (error) {
+        console.error("❌ API Error:", error);
+        toast.error(error?.message || "Failed to join quest");
+      }
+    };
   const [commentLoadingStates, setCommentLoadingStates] = useState({});
 
   return (
@@ -739,298 +893,316 @@ const Home = () => {
                         />
                       </div>
                     )}
-                {  <div
-                    key={post._id}
-                    className="p-6 glassy-card shadow-sm rounded-xl border border-gray-100"
-                    ref={
-                      isFirst ? firstPostRef : isLast ? lastPostRef : undefined
-                    }
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <button
-                        type="button"
-                        className="flex items-center gap-4 cursor-pointer"
-                        onClick={() => {
-                          if (post.userData?.user_path !== "Companies") {
-                            navigate(
-                              `/user/profile/${
-                                post.userData?.first_name || post.userData?.name
-                              }/${post.userData?._id}`,
-                            );
-                          } else if (post.userData?.user_path === "Companies") {
-                            toast.info(
-                              "Redirecting to the company's profile view...",
-                            );
-                            navigate(
-                              `/user/view-details/companies/${post.userData?._id}`,
-                            );
-                          } else {
-                            toast.info(
-                              "The Page You are Looking For Is Not Present!!",
-                            );
-                          }
-                        }}
-                        title="View profile"
-                      >
-                        {post?.userData?.profile_picture_url ? (
-                          <img
-                            src={
-                              post?.userData?.profile_picture_url ||
-                              "/0684456b-aa2b-4631-86f7-93ceaf33303c.png"
+                  {
+                    <div
+                      key={post._id}
+                      className="p-6 glassy-card shadow-sm rounded-xl border border-gray-100"
+                      ref={
+                        isFirst
+                          ? firstPostRef
+                          : isLast
+                            ? lastPostRef
+                            : undefined
+                      }
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <button
+                          type="button"
+                          className="flex items-center gap-4 cursor-pointer"
+                          onClick={() => {
+                            if (post.userData?.user_path !== "Companies") {
+                              navigate(
+                                `/user/profile/${
+                                  post.userData?.first_name ||
+                                  post.userData?.name
+                                }/${post.userData?._id}`,
+                              );
+                            } else if (
+                              post.userData?.user_path === "Companies"
+                            ) {
+                              toast.info(
+                                "Redirecting to the company's profile view...",
+                              );
+                              navigate(
+                                `/user/view-details/companies/${post.userData?._id}`,
+                              );
+                            } else {
+                              toast.info(
+                                "The Page You are Looking For Is Not Present!!",
+                              );
                             }
-                            alt={`${
-                              post?.userData?.first_name || post?.userData?.name
-                            } ${post?.userData?.last_name || ""}`}
-                            className="object-cover rounded-full w-12 h-12 border"
-                            onError={(e) => {
-                              const fallback =
-                                "/0684456b-aa2b-4631-86f7-93ceaf33303c.png";
-                              if (!e.currentTarget.src.endsWith(fallback))
-                                e.currentTarget.src = fallback;
-                            }}
-                          />
-                        ) : (
-                          <img
-                            src="/0684456b-aa2b-4631-86f7-93ceaf33303c.png"
-                            alt={`${
-                              post?.userData?.first_name || post?.userData?.name
-                            } ${post?.userData?.last_name || ""}`}
-                            className="object-cover rounded-full w-12 h-12 border"
-                            loading="lazy"
-                          />
-                        )}
-
-                        <div className="text-left">
-                          <h3 className="md:text-lg text-md font-semibold glassy-text-primary capitalize hover:glassy-text-secondary">
-                            {post.userData?.first_name || post?.userData?.name}{" "}
-                            {post.userData?.last_name}
-                          </h3>
-                          <p className="md:text-sm text-xs glassy-text-secondary">
-                            {post.userData?.headline ||
-                              (post.userData?.user_path === "Users"
-                                ? "user"
-                                : post?.userData?.user_path)}
-                          </p>
-                        </div>
-                      </button>
-
-                      <div className="flex items-center">
-                        {!post?.isSelfPost && (
-                          <FollowButton
-                            isFollowing={post?.isConnected}
-                            isLoading={
-                              loadingStates.follows[post.userData?._id]
-                            }
-                            onClick={() =>
-                              handleFollowClick(
-                                post.userData?._id,
-                                post.userData?.user_path,
-                              )
-                            }
-                          />
-                        )}
-                        <div className="relative ml-2">
-                          <button
-                            className="p-2 transition-colors rounded hover:glassy-card"
-                            onClick={(e) => handleOptionsClick(post._id, e)}
-                            aria-haspopup="menu"
-                            aria-expanded={showOptionsDropdown === post._id}
-                            title="More options"
-                          >
-                            {loadingId === post._id ? (
-                              <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
-                            ) : (
-                              <PiDotsThreeOutlineVerticalFill className="w-6 h-6 glassy-text-secondary" />
-                            )}
-                          </button>
-                          {showOptionsDropdown === post._id && (
-                            <div
-                              role="menu"
-                              className="!absolute right-0 mt-3 w-40 glassy-card rounded-md shadow-lg z-20 py-1 border border-[#0000001A]"
-                            >
-                              <button
-                                onClick={() => handleCopyLink(post)}
-                                className="flex items-center gap-2 px-4 py-2 text-sm glassy-text-primary hover:glassy-card w-full text-left  border-gray-200"
-                                role="menuitem"
-                              >
-                                <IoCopyOutline size={18} /> Copy link
-                              </button>
-
-                              {post?.post_type === "certificates" ||
-                              post?.post_type === "jobs" ? (
-                                <></>
-                              ) : (
-                                <button
-                                  onClick={() => handleReportPost(post._id)}
-                                  className="flex items-center gap-2 px-4 py-2 text-sm glassy-text-primary hover:glassy-card w-full text-left"
-                                  role="menuitem"
-                                >
-                                  <BsExclamationCircle size={18} /> Report
-                                </button>
-                              )}
-                              {post?.isSelfPost && (
-                                <button
-                                  onClick={() =>
-                                    handleDeleteButtonClick(post._id)
-                                  }
-                                  className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:glassy-card w-full text-left border-t border-gray-200"
-                                  role="menuitem"
-                                >
-                                  <AiOutlineDelete size={18} /> Delete
-                                </button>
-                              )}
-                            </div>
+                          }}
+                          title="View profile"
+                        >
+                          {post?.userData?.profile_picture_url ? (
+                            <img
+                              src={
+                                post?.userData?.profile_picture_url ||
+                                "/0684456b-aa2b-4631-86f7-93ceaf33303c.png"
+                              }
+                              alt={`${
+                                post?.userData?.first_name ||
+                                post?.userData?.name
+                              } ${post?.userData?.last_name || ""}`}
+                              className="object-cover rounded-full w-12 h-12 border"
+                              onError={(e) => {
+                                const fallback =
+                                  "/0684456b-aa2b-4631-86f7-93ceaf33303c.png";
+                                if (!e.currentTarget.src.endsWith(fallback))
+                                  e.currentTarget.src = fallback;
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src="/0684456b-aa2b-4631-86f7-93ceaf33303c.png"
+                              alt={`${
+                                post?.userData?.first_name ||
+                                post?.userData?.name
+                              } ${post?.userData?.last_name || ""}`}
+                              className="object-cover rounded-full w-12 h-12 border"
+                              loading="lazy"
+                            />
                           )}
+
+                          <div className="text-left">
+                            <h3 className="md:text-lg text-md font-semibold glassy-text-primary capitalize hover:glassy-text-secondary">
+                              {post.userData?.first_name ||
+                                post?.userData?.name}{" "}
+                              {post.userData?.last_name}
+                            </h3>
+                            <p className="md:text-sm text-xs glassy-text-secondary">
+                              {post.userData?.headline ||
+                                (post.userData?.user_path === "Users"
+                                  ? "user"
+                                  : post?.userData?.user_path)}
+                            </p>
+                          </div>
+                        </button>
+
+                        <div className="flex items-center">
+                          {!post?.isSelfPost && (
+                            <FollowButton
+                              isFollowing={post?.isConnected}
+                              isLoading={
+                                loadingStates.follows[post.userData?._id]
+                              }
+                              onClick={() =>
+                                handleFollowClick(
+                                  post.userData?._id,
+                                  post.userData?.user_path,
+                                )
+                              }
+                            />
+                          )}
+                          <div className="relative ml-2">
+                            <button
+                              className="p-2 transition-colors rounded hover:glassy-card"
+                              onClick={(e) => handleOptionsClick(post._id, e)}
+                              aria-haspopup="menu"
+                              aria-expanded={showOptionsDropdown === post._id}
+                              title="More options"
+                            >
+                              {loadingId === post._id ? (
+                                <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <PiDotsThreeOutlineVerticalFill className="w-6 h-6 glassy-text-secondary" />
+                              )}
+                            </button>
+                            {showOptionsDropdown === post._id && (
+                              <div
+                                role="menu"
+                                className="!absolute right-0 mt-3 w-40 glassy-card rounded-md shadow-lg z-20 py-1 border border-[#0000001A]"
+                              >
+                                <button
+                                  onClick={() => handleCopyLink(post)}
+                                  className="flex items-center gap-2 px-4 py-2 text-sm glassy-text-primary hover:glassy-card w-full text-left  border-gray-200"
+                                  role="menuitem"
+                                >
+                                  <IoCopyOutline size={18} /> Copy link
+                                </button>
+
+                                {post?.post_type === "certificates" ||
+                                post?.post_type === "jobs" ? (
+                                  <></>
+                                ) : (
+                                  <button
+                                    onClick={() => handleReportPost(post._id)}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm glassy-text-primary hover:glassy-card w-full text-left"
+                                    role="menuitem"
+                                  >
+                                    <BsExclamationCircle size={18} /> Report
+                                  </button>
+                                )}
+                                {post?.isSelfPost && (
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteButtonClick(post._id)
+                                    }
+                                    className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:glassy-card w-full text-left border-t border-gray-200"
+                                    role="menuitem"
+                                  >
+                                    <AiOutlineDelete size={18} /> Delete
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    {post?.title && (
-                      <p className="mb-3 leading-relaxed break-words break-all  glassy-text-primary md:text-base font-normal text-sm">
-                        {isExpanded ? post?.title : post?.title}
-                      </p>
-                    )}
-
-                    {post?.content && (
-                      <p className="mb-3 leading-relaxed break-words break-all  glassy-text-primary md:text-base font-normal text-sm">
-                        {isExpanded
-                          ? post?.content
-                          : post?.content?.slice(0, 200)}
-                        {post?.content?.length > 200 && (
-                          <>
-                            {!isExpanded && "..."}
-                            <button
-                              onClick={() => handleSeeMore(post?._id)}
-                              className="ml-2 md:text-sm text-xs glassy-text-primary hover:underline"
-                            >
-                              {isExpanded ? "See less" : "See more"}
-                            </button>
-                          </>
-                        )}
-                      </p>
-                    )}
-
-                    {post?.post_type === "link" && post?.link && (
-                      <div className="mx-auto w-full">
-                        <MessageText2 msg={post?.link} />
-                      </div>
-                    )}
-
-                    {Array.isArray(post?.tags) && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {post.tags.map((tag, i) => (
-                          <span
-                            key={i}
-                            className="md:text-sm text-sm font-semibold glassy-text-secondary capitalize"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="space-y-3">
-                      {post?.post_type === "jobs" &&
-                        isDateInRange(post.job_id) &&
-                        post.job_id && <JobPost job={post.job_id} />}
-
-                        
-                      {post?.post_type === "quests" && post.quest_id && (
-                        <QuestPostCard
-                          key={post._id}
-                          post={post}
-                          // onVote={handleQuestVote}
-                        />
+                      {post?.title && (
+                        <p className="mb-3 leading-relaxed break-words break-all  glassy-text-primary md:text-base font-normal text-sm">
+                          {isExpanded ? post?.title : post?.title}
+                        </p>
                       )}
-                      {post?.post_type === "certificates" &&
-                        post?.certificate_id && (
-                          <LinkedInCertificate
-                            certificateName={post?.certificate_id?.name}
-                            issueBy={post?.certificate_id?.issuing_organization}
-                            description={post?.certificate_id?.description}
-                            date={convertTimestampToDate(
-                              post?.certificate_id?.issue_date,
-                            )}
-                            record={post?.certificate_id}
-                            type="certifications"
-                            username={post?.userData?.name}
+
+                      {post?.content && (
+                        <p className="mb-3 leading-relaxed break-words break-all  glassy-text-primary md:text-base font-normal text-sm">
+                          {isExpanded
+                            ? post?.content
+                            : post?.content?.slice(0, 200)}
+                          {post?.content?.length > 200 && (
+                            <>
+                              {!isExpanded && "..."}
+                              <button
+                                onClick={() => handleSeeMore(post?._id)}
+                                className="ml-2 md:text-sm text-xs glassy-text-primary hover:underline"
+                              >
+                                {isExpanded ? "See less" : "See more"}
+                              </button>
+                            </>
+                          )}
+                        </p>
+                      )}
+
+                      {post?.post_type === "link" && post?.link && (
+                        <div className="mx-auto w-full">
+                          <MessageText2 msg={post?.link} />
+                        </div>
+                      )}
+
+                      {Array.isArray(post?.tags) && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {post.tags.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="md:text-sm text-sm font-semibold glassy-text-secondary capitalize"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="space-y-3">
+                        {post?.post_type === "jobs" &&
+                          isDateInRange(post.job_id) &&
+                          post.job_id && <JobPost job={post.job_id} />}
+
+                        {post?.post_type === "quests" && post.quest_id && (
+                          <QuestPostCard
+                            key={post._id}
+                            quest={post.quest_id}
+                            onEngage={fetchFeedBack}
+                            onVote={handleVote}
+                            data-aos="fade-up"
+                            data-aos-delay={index * 80}
+                            // isLoading2={isLoading2}
                           />
                         )}
+                        
+                        {post?.post_type === "certificates" &&
+                          post?.certificate_id && (
+                            <LinkedInCertificate
+                              certificateName={post?.certificate_id?.name}
+                              issueBy={
+                                post?.certificate_id?.issuing_organization
+                              }
+                              description={post?.certificate_id?.description}
+                              date={convertTimestampToDate(
+                                post?.certificate_id?.issue_date,
+                              )}
+                              record={post?.certificate_id}
+                              type="certifications"
+                              username={post?.userData?.name}
+                            />
+                          )}
 
-                      {post?.post_type === "poll" && post.poll && (
-                        <Poll
-                          poll={post.poll}
+                        {post?.post_type === "poll" && post.poll && (
+                          <Poll
+                            poll={post.poll}
+                            postId={post._id}
+                            isSelfPost={post.isSelfPost}
+                            updatedAt={post?.updatedAt}
+                            isVoted={post?.isVoted}
+                            voting_index={post?.voting_index}
+                          />
+                        )}
+                        <MediaCarousel
+                          post={{
+                            image_urls: post?.image_urls,
+                            video_url: post?.video_url,
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-4 mt-2">
+                        <ActionButton
+                          icon={
+                            localLikes[post._id]
+                              ? PiHeartStraightFill
+                              : PiHeartStraightLight
+                          }
+                          count={post.like_count || 0}
+                          isCount={!!localLikes[post._id]}
+                          onClick={() => handleLike(post._id)}
+                          isLoading={isLikeLoading}
+                          ariaLabel="Like"
+                        />
+                        <ActionButtonComment
+                          icon={FiMessageCircle}
+                          count={post.comments}
+                          isActive={!!activeCommentSections[post._id]}
+                          isLoading={!!commentLoadingStates[post._id]}
+                          onClick={() => {
+                            toggleComments(post._id);
+                            // setShowComments(!showComments);
+                          }}
+                          ariaLabel="Comments"
+                        />
+                        <ActionButton
+                          icon={PiShareFat}
+                          onClick={() => handleShareClick(post)}
+                          ariaLabel="Share"
+                        />
+                      </div>
+
+                      <div className="mt-1">
+                        <span className="text-xs glassy-text-secondary">
+                          Posted on {convertTimestampToDate2(post?.updatedAt)}
+                        </span>
+                      </div>
+
+                      {showComments && (
+                        <CommentSection
                           postId={post._id}
-                          isSelfPost={post.isSelfPost}
-                          updatedAt={post?.updatedAt}
-                          isVoted={post?.isVoted}
-                          voting_index={post?.voting_index}
+                          initialComments={getCombinedComments(post._id)}
+                          onCommentSubmit={handleCommentSubmit}
+                          onReplySubmit={handleReplySubmit}
+                          onLike={handleCommentLike}
+                          commentCount={post?.comments}
+                          commentPostData={commentsData[post._id] || []}
+                          isLoading={isCommentLoading}
+                          setPosts={setPosts}
+                          type={tabActive}
+                          size={10}
+                          page={currentPage}
+                          showComments={showComments}
+                          // setShowComments={setShowComments}
+                          handleDelete={handleDelete}
                         />
                       )}
-                      <MediaCarousel
-                        post={{
-                          image_urls: post?.image_urls,
-                          video_url: post?.video_url,
-                        }}
-                      />
                     </div>
-
-                    <div className="flex items-center gap-4 mt-2">
-                      <ActionButton
-                        icon={
-                          localLikes[post._id]
-                            ? PiHeartStraightFill
-                            : PiHeartStraightLight
-                        }
-                        count={post.like_count || 0}
-                        isCount={!!localLikes[post._id]}
-                        onClick={() => handleLike(post._id)}
-                        isLoading={isLikeLoading}
-                        ariaLabel="Like"
-                      />
-                      <ActionButtonComment
-                        icon={FiMessageCircle}
-                        count={post.comments}
-                        isActive={!!activeCommentSections[post._id]}
-                        isLoading={!!commentLoadingStates[post._id]}
-                        onClick={() => {
-                          toggleComments(post._id);
-                          // setShowComments(!showComments);
-                        }}
-                        ariaLabel="Comments"
-                      />
-                      <ActionButton
-                        icon={PiShareFat}
-                        onClick={() => handleShareClick(post)}
-                        ariaLabel="Share"
-                      />
-                    </div>
-
-                    <div className="mt-1">
-                      <span className="text-xs glassy-text-secondary">
-                        Posted on {convertTimestampToDate2(post?.updatedAt)}
-                      </span>
-                    </div>
-
-                    {showComments && (
-                      <CommentSection
-                        postId={post._id}
-                        initialComments={getCombinedComments(post._id)}
-                        onCommentSubmit={handleCommentSubmit}
-                        onReplySubmit={handleReplySubmit}
-                        onLike={handleCommentLike}
-                        commentCount={post?.comments}
-                        commentPostData={commentsData[post._id] || []}
-                        isLoading={isCommentLoading}
-                        setPosts={setPosts}
-                        type={tabActive}
-                        size={10}
-                        page={currentPage}
-                        showComments={showComments}
-                        // setShowComments={setShowComments}
-                        handleDelete={handleDelete}
-                      />
-                    )}
-                  </div>}
+                  }
                 </>
               );
             })}
@@ -1075,7 +1247,58 @@ const Home = () => {
           isLoading={loadingStates.reports[selectedPostForReport]}
         />
       )}
+    <FeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={handleCloseFeedback}
+        questData={questData}
+        feedbackData={feedbackData}
+        onSubmitFeedback={handleSubmitFeedback}
+      />
 
+      <Modal
+        title="Join Quest"
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          resetForm();
+        }}
+        handleSubmit={handleSubmit}
+        size="md"
+        submitText="Join Quest"
+      >
+        {/* {questData && */}
+        <div className="space-y-4">
+          <CustomInput
+            className="w-full  h-10"
+            label="Email"
+            required
+            placeholder="Enter User email"
+            value={formData?.email}
+            error={errors?.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+          />
+          <CustomInput
+            className="w-full h-10"
+            required
+            label="User"
+            placeholder="Enter user"
+            value={formData?.identifier}
+            onChange={(e) => handleChange("identifier", e.target.value)}
+            error={errors?.identifier}
+          />
+          <CustomInput
+            type="textarea"
+            label="Remarks"
+            className="w-full"
+            placeholder="Enter your remarks (5-100 characters)"
+            value={formData?.remarks}
+            onChange={(e) => handleChange("remarks", e.target.value)}
+            rows={3}
+            error={errors?.remarks}
+          />
+        </div>
+        {/* } */}
+      </Modal>
       <AlertModal
         isOpen={isDeleteModal}
         title={

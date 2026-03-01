@@ -241,6 +241,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { MdSchool, MdWork } from "react-icons/md";
 
 const CommonSection = ({
   title = "EDUCATION",
@@ -283,6 +284,18 @@ const CommonSection = ({
 
   const handleToggle = () => {
     setIsExtended((prev) => !prev);
+  };
+  const isImage = (url) => {
+    const imageExtensions = [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".gif",
+      ".webp",
+      ".bmp",
+      ".svg",
+    ];
+    return imageExtensions.some((ext) => url?.toLowerCase().endsWith(ext));
   };
 
   return (
@@ -363,23 +376,52 @@ const CommonSection = ({
                   }`}
                   data-aos-delay={index * 100}
                 >
+                      {/* CERTIFICATE PREVIEW */}
+      <div className="w-full rounded-lg overflow-hidden">
+       
+          <>
+            {isImage(record.media_url) ? (
+              <img
+                src={record.media_url}
+                alt="preview"
+                className="w-full h-64 sm:h-72 md:h-80 object-contain"
+              />
+            ) : (
+              <iframe
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(
+                  record.file_url
+                )}&embedded=true`}
+                className="w-full h-80 border rounded"
+                title="file-preview"
+              />
+            )}
+          </>
+       
+      </div>
                   <div className="group">
                     <div className="w-full border-b border-[var(--border-color)] pb-6 space-y-2 group-hover:border-blue-400 transition-colors duration-300">
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="font-medium glassy-text-primary text-lg flex items-center gap-2">
                             <span className="bg-[var(--bg-button)] rounded-full w-8 h-8 flex items-center justify-center">
-                              <PiGraduationCapLight />
+                              {record?.company_id ? (
+                                <MdWork />
+                              ) : record?.institution_id ? (
+                                <MdSchool />
+                              ) : (
+                               ""
+                              )}
                             </span>
+
                             <span className="break-words break-all capitalize">
-                              {title === "EDUCATION"
-                                ? record.institution_id?.name
-                                : title === "EXPERIENCE"
-                                  ? record.company_id?.name
-                                  : record?.name}
+                              {record?.company_id?.name ||
+                                record?.institution_id?.name  || ""
+                                }
                             </span>
                           </h3>
-
+ <p className="glassy-text-secondary text-xs font-medium capitalize">
+                            {record?.name }
+                          </p>
                           <p className="glassy-text-secondary text-xs font-medium capitalize">
                             {record?.issuing_organization ||
                               record.degree_id?.name ||

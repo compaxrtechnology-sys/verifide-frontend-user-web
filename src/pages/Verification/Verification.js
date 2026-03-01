@@ -48,7 +48,7 @@ import { getProfile } from "../../redux/slices/authSlice";
 import Button from "../../components/ui/Button/Button";
 import { SkillsCard2 } from "../../components/ui/cards/Card";
 
-const Verification = ({ headline }) => {
+const Verification = ({ headline ,profileData}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selector = useSelector((state) => state.verification);
@@ -620,6 +620,30 @@ const Verification = ({ headline }) => {
       },
     }));
   };
+useEffect(() => {
+  if (!profileData) return;
+
+  setFormData((prev) => ({
+  
+   
+    phone: profileData.phone_number || "",
+   
+
+    country_code: profileData.country_code
+      ? {
+          name: profileData.country_code.name || "",
+          dial_code: profileData.country_code.dial_code || "",
+          short_name: profileData.country_code.short_name || "",
+          emoji: profileData.country_code.emoji || "",
+        }
+      : {
+          name: "",
+          dial_code: "",
+          short_name: "",
+          emoji: "",
+        },
+  }));
+}, [profileData, setFormData]);
 
   return (
     <>
@@ -868,15 +892,16 @@ const Verification = ({ headline }) => {
                 </>
               ) : (
                 <div className="space-y-4">
-                  <FilterSelect
+                  {/* <FilterSelect
                     label="Select Country"
+                  
                     options={countryList || []}
                     value={countryList.find(
-                      (opt) => opt.label === formData?.country_code?.name
+                      (opt) => opt.short_name === formData?.country_code?.short_name
                     )}
                     onChange={(select) => handleCountrySelect(select)}
                     error={errors?.country_code}
-                  />
+                  /> */}
                   {formData?.country_code?.name && (
                     <CustomInput
                       type="number"
@@ -891,6 +916,7 @@ const Verification = ({ headline }) => {
                       className="w-full h-10"
                       placeholder="Enter mobile no according to country"
                       error={errors?.phone}
+                      disabled={true}
                     />
                   )}
                 </div>

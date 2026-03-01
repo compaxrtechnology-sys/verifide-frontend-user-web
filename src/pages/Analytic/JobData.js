@@ -17,7 +17,7 @@ const PAGE_SIZE = 10;
 /* ------------------ TABLE HEADINGS ------------------ */
 const tableHeadings = [
   { label: "#", key: "index" },
-  { label: "Company", key: "company", filterKey: "search" },
+  // { label: "Company", key: "company", filterKey: "search" },
   { label: "Job Name", key: "name", filterKey: "search" },
   { label: "Job ID", key: "_id" },
   { label: "Job Posted On", key: "createdAt", filterKey: "date" },
@@ -245,9 +245,9 @@ const JobManagement = () => {
           index + 1,
 
           /* -------- Company -------- */
-          <span className="capitalize">
-            {item?.company_id?.display_name || item?.company_id?.name || "N/A"}
-          </span>,
+          // <span className="capitalize">
+          //   {item?.company_id?.display_name || item?.company_id?.name || "N/A"}
+          // </span>,
 
           /* -------- Job Name -------- */
           <span className="capitalize">{item?.job_title?.name || "-"}</span>,

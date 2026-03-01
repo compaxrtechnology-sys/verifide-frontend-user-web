@@ -42,6 +42,9 @@ import { toast } from "sonner";
 import JobManagement from "../../pages/Analytic/JobData";
 import EmployeeManagement from "../../pages/Analytic/EmployeeData";
 import QuestManagement from "../../pages/Analytic/QuestData";
+import InstitutionStudentsAnalytics from "../../pages/Analytic/StudentData";
+import JobActiveStudentsAnalytics from "../../pages/Analytic/StudendJobData";
+import StudentCertificationAnalytics from "../../pages/Analytic/StudentCertificationData";
 // import QuestManagement from "../../pages/Analytic/QuestData";
 
 const PageNotFound = lazy(() => import("../Not found/PageNotFound"));
@@ -365,6 +368,9 @@ function CompanyLayout() {
                   <Route path="/course/recommended" element={<Recommended />} />
                   <Route path={`/analytics/jobs`} element={<JobManagement />} />
                   <Route path={`/analytics/employee`} element={<EmployeeManagement />} />
+                  <Route path={`/analytics/student`} element={<InstitutionStudentsAnalytics />} />
+                  <Route path={`/analytics/student-job`} element={<JobActiveStudentsAnalytics />} />
+                  <Route path={`/analytics/student-certification`} element={<StudentCertificationAnalytics />} />
                   <Route path={`/quest-data`} element={<QuestManagement />} />
                 </>
               }

@@ -49,6 +49,7 @@ const PersonalInformation = ({
     last_name: useRef(null),
     username: useRef(null),
     birth_date: useRef(null),
+    phone_no: useRef(null),
     gender: useRef(null),
     country: useRef(null),
     state: useRef(null),
@@ -187,6 +188,15 @@ const PersonalInformation = ({
                 error={error?.birth_date}
                 allowFutureDate={false}
                 dobRange={true}
+              />
+              <CustomInput
+                label="Phone Number *"
+                value={formData?.phone_number}
+                name="phone_number"
+                onChange={(e) => handleChange("phone_number", e)}
+                placeholder="Enter phone number"
+                error={error?.phone_number}
+                disabled={true}
               />
             </div>
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-4 items-end lg:grid-cols-4 md:grid-cols-2 mt-6">

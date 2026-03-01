@@ -312,7 +312,7 @@ const CompanyInstituteView = () => {
               </div>
             )}
 
-            {info?.phone_no && (
+            {/* {info?.phone_no && (
               <div className="flex items-center gap-3 p-3  rounded-lg glassy-card hover:bg-black transition-colors">
                 <div className="p-2 glassy-card rounded-lg shadow-sm">
                   <BiPhoneIncoming className="w-5 h-5 glassy-text-primary" />
@@ -327,7 +327,7 @@ const CompanyInstituteView = () => {
                   </a>
                 </div>
               </div>
-            )}
+            )} */}
 
             {info?.email && (
               <div className="flex items-start sm:items-center gap-3 p-3 rounded-lg glassy-card hover:bg-black transition-colors w-full overflow-hidden">

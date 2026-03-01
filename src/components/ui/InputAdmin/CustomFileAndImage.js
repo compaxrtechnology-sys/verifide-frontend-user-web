@@ -136,7 +136,7 @@ const EnhancedFileInput = ({
             onDrop={handleDrop}
           >
             <input
-              ref={fileInputRef}
+              // ref={fileInputRef}
               type="file"
               onChange={handleInputChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

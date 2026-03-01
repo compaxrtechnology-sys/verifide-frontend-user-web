@@ -287,7 +287,7 @@ const ProfileCardData = ({ data, frameStatus, handleSelection }) => {
             />
 
             {/* Percentage Text */}
-            <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm md:text-base font-semibold text-white">
+            <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm md:text-base font-semibold glassy-text-primary">
               {`${data?.personalInfo?.profile_completion_percentage || 0}%`}
             </div>
           </div>
@@ -366,7 +366,7 @@ const ProfileCardData = ({ data, frameStatus, handleSelection }) => {
               "Add your latest work experience"}
           </h3>
 
-          <p className="text-sm text-white/70">
+          <p className="text-sm glassy-text-primary/70">
             {data?.latestCompany?.companyName ||
               "Go to Work Experience section below to add Experience Details"}
           </p>
@@ -394,7 +394,7 @@ const ProfileCardData = ({ data, frameStatus, handleSelection }) => {
             {data?.latestEducation?.institution ||
               "Add your latest education details"}
           </h3>
-          <p className="text-sm text-white/70">
+          <p className="text-sm glassy-text-primary/70">
             {data?.latestEducation?.field_of_studies ||
               "Go to Education section below to add Education Details."}
           </p>
@@ -418,7 +418,7 @@ const ProfileCardData = ({ data, frameStatus, handleSelection }) => {
         </div>
 
         {/* Tooltip */}
-        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm bg-gray-800 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-sm bg-gray-800 glassy-text-primary rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
           Click to view verified skills
         </span>
       </div>

@@ -516,8 +516,15 @@ const RecruiterAssessment = () => {
           assessmentsSingleDocList({ _id: assessment._id }),
         ).unwrap();
         const course = allCourses.find((c) => c._id === res.data.course_id);
-        const level = levels.find((l) => l._id === res.data.level_id);
+         const selectedLevel = levelList.find(
+  (lvl) => lvl.value === res.data.level_id
+);
 
+    
+ // ✅ Convert skill IDs to Select format
+      const selectedSkills = skillList.filter((skill) =>
+        res.data.skill_ids?.includes(skill.value)
+      );
         setModalData({ type: "edit", data: res.data });
         setFormData({
           ...res.data,
@@ -529,8 +536,8 @@ const RecruiterAssessment = () => {
               }
             : null,
           // ✅ IDs ONLY
-          skill_ids: res.data.skill_ids || [],
-          level_id: res.data.level_id || "",
+          skill_ids: selectedSkills || [],
+        level_id: selectedLevel || null,
           questions: res.data.questions.map((question) => ({
             ...question,
             question_type: questionTypes.find(
@@ -661,16 +668,16 @@ const RecruiterAssessment = () => {
       (sum, question) => sum + (question.time_limit || 1),
       0,
     );
-    setIsSubmitting(true);
+      setIsSubmitting(true);
 
-    try {
-      const payload = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        material_url: formData.material_url.trim(),
-        course_id: formData.course_id?.value || null,
-        skill_ids: formData.skill_ids.map((skill) => skill.value),
-        level_id: formData.level_id.value,
+      try {
+        const payload = {
+          title: formData.title.trim(),
+          description: formData.description.trim(),
+          material_url: formData.material_url.trim(),
+          course_id: formData.course_id?.value || null,
+          skill_ids: formData.skill_ids.map((skill) => skill.value),
+          level_id: formData.level_id.value,
         no_of_questions: formData.no_of_questions,
         verification_type: formData.verification_type,
         time_limit: totalTime,

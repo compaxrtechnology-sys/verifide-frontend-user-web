@@ -3,7 +3,7 @@ import { createExtraReducersForThunk, createApiThunkPrivate, createApiThunkPubli
 
 // API Thunks
 export const getCompaniesList = createApiThunkPrivate('getCompaniesList', '/user/companies/list', 'GET');
-export const createCompany = createApiThunkPublic('createCompany', '/user/companies/create', 'POST');
+export const createCompany = createApiThunkPrivate('createCompany', '/user/companies/create', 'POST');
 export const updateCompany = createApiThunkPrivate('updateCompany', '/user/companies/update', 'POST');
 export const deleteCompany = createApiThunkPrivate('deleteCompany', '/user/companies/soft-delete', 'DELETE');
 export const getCompanyDetails = createApiThunkPrivate('getCompanyDetails', '/user/companies/single-document', 'GET', 'true');

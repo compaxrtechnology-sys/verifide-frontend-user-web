@@ -71,11 +71,12 @@ export const searchUsers = createApiThunkPrivate(
   "GET",
 );
 
-export const masterIndustry = createApiThunkPublic(
+export const masterIndustry = createApiThunkPrivate(
   "masterIndustry",
   "user/profiles/master-industries",
   "GET",
 );
+
 export const profileRoles = createApiThunkPrivate(
   "profileRoles",
   "user/profiles/master-profile-roles",
@@ -237,6 +238,7 @@ export const getQuestStats = createApiThunkPrivate(
   "/global-module/quests/analytic/quest-stats",
   "GET",
 );
+
 
 const cscSlice = createSlice({
   name: "csc",

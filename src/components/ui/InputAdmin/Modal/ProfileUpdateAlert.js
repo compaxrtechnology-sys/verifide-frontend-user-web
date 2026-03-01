@@ -36,7 +36,7 @@ const ProfileUpdateAlert = ({ isOpen, onClose, onUpdate }) => {
         "
       >
         <button
-          className="absolute top-4 right-4 text-gray-300 hover:text-white text-xl"
+          className="absolute top-4 right-4 text-gray-300 hover:glassy-text-primary text-xl"
           onClick={onClose}
         >
           ✕
@@ -48,7 +48,7 @@ const ProfileUpdateAlert = ({ isOpen, onClose, onUpdate }) => {
           alt="Alert"
         />
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-2 text-center">
+        <h2 className="text-xl md:text-2xl font-semibold glassy-text-primary mb-2 text-center">
           Alert Update Profile !
         </h2>
 

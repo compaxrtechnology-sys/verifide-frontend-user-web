@@ -203,7 +203,7 @@ const PostsManagement = () => {
         title="Post Details"
       >
         {modalData.data && (
-          <div className="relative overflow-hidden rounded-2xl text-whiteshadow-md p-8 transition-all duration-500">
+          <div className="relative overflow-hidden rounded-2xl glassy-text-primaryshadow-md p-8 transition-all duration-500">
             <div className="relative z-10 flex items-center gap-4 mb-6">
               <img
                 src={modalData?.data?.user_id?.profile_picture_url || 'https://i.pinimg.com/736x/0f/36/88/0f368853758639a4839897ac215b462b.jpg'}
