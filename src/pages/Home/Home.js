@@ -1095,7 +1095,7 @@ const Home = () => {
 
                       <div className="space-y-3">
                         {post?.post_type === "jobs" &&
-                          isDateInRange(post.job_id) &&
+                          // isDateInRange(post.job_id) &&
                           post.job_id && <JobPost job={post.job_id} />}
 
                         {post?.post_type === "quests" && post.quest_id && (

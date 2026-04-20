@@ -54,10 +54,15 @@ const JobCard = ({
     setShowOptionsDropdown(false);
   }, []);
 
-  const isDateInRange = () => {
-    const currentDate = new Date().getTime();
-    return currentDate >= job?.start_date && currentDate <= job?.end_date;
-  };
+const isDateInRange = () => {
+  if (!job?.start_date || !job?.end_date) return false;
+
+  const now = Date.now();
+  const start = Number(job.start_date);
+  const end = Number(job.end_date);
+
+  return now >= start && now <= end;
+};
   const dateInRange = isDateInRange();
   const getRejectedDate = () => {
     if (job?.status === "rejected" && job?.reviews?.length > 0) {

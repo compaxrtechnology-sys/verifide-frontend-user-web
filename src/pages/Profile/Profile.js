@@ -199,6 +199,7 @@ const validationRules = {
   profile: {
     first_name: { required: true, message: "First name is required" },
     last_name: { required: true, message: "Last name is required" },
+    country_code: { required: true, message: "Country code is required" },
     phone_number: { required: true, message: "Phone number is required" },
     birth_date: {
       required: true,
@@ -372,6 +373,7 @@ const Profile = ({ profileData }) => {
       field_of_studies: "",
       start_date: "",
       end_date: "",
+      country_code: { name: "", dial_code: "", short_name: "", emoji: "" },
       phone_number: "",
       currently_available: false,
       duration: "",
@@ -729,6 +731,7 @@ const Profile = ({ profileData }) => {
           ? new Date(data.end_date).toISOString().split("T")[0]
           : "",
         phone_number: data.phone_number,
+        country_code:  data.country_code,
       };
 
       setFormData(transformedData);
@@ -918,6 +921,7 @@ const Profile = ({ profileData }) => {
         last_name: formData?.last_name,
         // "email": formData?.email,
         phone_number: formData?.phone_number,
+        country_code: formData?.country_code,
         gender: formData?.gender,
         summary: formData?.summary,
         address: formData?.address,

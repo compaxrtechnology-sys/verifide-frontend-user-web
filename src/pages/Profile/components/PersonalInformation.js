@@ -9,6 +9,7 @@ import { MdOutlineContentCopy } from "react-icons/md";
 import { toast } from "sonner";
 import { BaseUrl } from "../../../components/hooks/axiosProvider";
 import { FiChevronDown } from "react-icons/fi";
+import FilterSelect from "../../../components/ui/Input/FilterSelect";
 
 const PersonalInformation = ({
   formData,
@@ -25,6 +26,7 @@ const PersonalInformation = ({
   handleSubmit,
   setErrors,
 }) => {
+  console.log("countryList in PersonalInformation:", countryList , formData);
   const getFormValue = (path) => {
     const keys = path.split(".");
     let value = formData;
@@ -189,6 +191,17 @@ const PersonalInformation = ({
                 allowFutureDate={false}
                 dobRange={true}
               />
+               <FilterSelect
+                    label="Select Country Code"
+
+                    onChange={(option) => handleSelectChange("country_code", option)}
+                options={countryList || []}
+                    selectedOption={countryList.find(
+                      (opt) => opt.short_name === formData?.country_code?.short_name
+                    )}
+                    
+                    error={error?.country_code}
+                  />
               <CustomInput
                 label="Phone Number *"
                 value={formData?.phone_number}
@@ -196,7 +209,7 @@ const PersonalInformation = ({
                 onChange={(e) => handleChange("phone_number", e)}
                 placeholder="Enter phone number"
                 error={error?.phone_number}
-                disabled={true}
+                // disabled={true}
               />
             </div>
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-4 items-end lg:grid-cols-4 md:grid-cols-2 mt-6">

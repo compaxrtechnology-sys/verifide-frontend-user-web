@@ -977,6 +977,7 @@ const handleAddItem = async () => {
     }
 
     setIsSubmitting(true);
+  console.log("this is the form data before submit", formData);
 
     const finalData = {
       company_id: formData?.company_id || "",

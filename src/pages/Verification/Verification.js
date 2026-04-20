@@ -892,16 +892,16 @@ useEffect(() => {
                 </>
               ) : (
                 <div className="space-y-4">
-                  {/* <FilterSelect
+                  <FilterSelect
                     label="Select Country"
                   
                     options={countryList || []}
-                    value={countryList.find(
+                    selectedOption={countryList.find(
                       (opt) => opt.short_name === formData?.country_code?.short_name
                     )}
                     onChange={(select) => handleCountrySelect(select)}
                     error={errors?.country_code}
-                  /> */}
+                  />
                   {formData?.country_code?.name && (
                     <CustomInput
                       type="number"
@@ -916,7 +916,7 @@ useEffect(() => {
                       className="w-full h-10"
                       placeholder="Enter mobile no according to country"
                       error={errors?.phone}
-                      disabled={true}
+                      // disabled={true}
                     />
                   )}
                 </div>

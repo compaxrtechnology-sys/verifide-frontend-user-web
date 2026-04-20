@@ -254,8 +254,10 @@ export const getDuration = (startDate, endDate) => {
 
 export const convertToTimestamp = (dateString) => {
   if (!dateString) return null;
-  const date = new Date(dateString);
-  return date.getTime(); // Milliseconds timestamp
+
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  return new Date(year, month - 1, day).getTime();
 };
 
 export const formatDateRange = (startTimestamp, endTimestamp) => {
